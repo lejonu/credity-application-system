@@ -58,6 +58,7 @@ class CustomerResourceTest {
         .content(valueAsString)
     )
       .andExpect(MockMvcResultMatchers.status().isCreated)
+      .andExpect(MockMvcResultMatchers.jsonPath("$").isMap)
       .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Cami"))
       .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Cavalcante"))
       .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value("28475934625"))

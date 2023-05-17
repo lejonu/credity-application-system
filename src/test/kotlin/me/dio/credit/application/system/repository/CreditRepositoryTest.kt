@@ -1,11 +1,15 @@
 package me.dio.credit.application.system.repository
 
+import io.mockk.every
+import io.mockk.verify
 import me.dio.credit.application.system.entity.Address
 import me.dio.credit.application.system.entity.Credit
 import me.dio.credit.application.system.entity.Customer
+import me.dio.credit.application.system.service.impl.CreditService
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -21,6 +25,7 @@ import java.util.*
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CreditRepositoryTest {
   @Autowired lateinit var creditRepository: CreditRepository
+
   @Autowired lateinit var testEntityManager: TestEntityManager
 
   private lateinit var customer: Customer
@@ -31,6 +36,19 @@ class CreditRepositoryTest {
     customer = testEntityManager.persist(buildCustomer())
     credit1 = testEntityManager.persist(buildCredit(customer = customer))
     credit2 = testEntityManager.persist(buildCredit(customer = customer))
+  }
+
+  @Test
+  fun `should save credit`() {
+    //given
+    val fakeCustomer: Customer = buildCustomer()
+    val fakeCredit: Credit = buildCredit(customer = fakeCustomer)
+    val actual: Credit = creditRepository.save(fakeCredit)
+    // then
+    // println(actual.creditCode)
+    Assertions.assertThat(actual).isNotNull
+    Assertions.assertThat(actual).isExactlyInstanceOf(Credit::class.java)
+    Assertions.assertThat(actual).isSameAs(fakeCredit)
   }
 
   @Test
